@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐝 ¿Quién Quiere Ser Millonario? - Edición Abeja Reina 👑</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+            box-shadow: 0 0 15px #ffd700;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .game-header {
+            background: linear-gradient(135deg, #ffd700 0%, #ffb347 50%, #ffd700 100%);
+            background-size: 200% 200%;
+            animation: goldShimmer 4s ease infinite;
+            padding: 40px;
+            text-align: center;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            box-shadow: 
+                0 0 50px rgba(255, 215, 0, 0.8),
+                inset 0 0 50px rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes goldShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .game-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: rotate 8s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .game-header h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+            color: #1a1a2e;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .game-header p {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a2e;
+            position: relative;
+            z-index: 2;
+        }
+
+        .game-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .money-ladder {
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.2), rgba(255, 179, 71, 0.1));
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            height: fit-content;
+        }
+
+        .money-ladder h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffd700;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .money-level {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .money-level.current {
+            background: linear-gradient(45deg, #ffd700, #ffb347);
+            color: #1a1a2e;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            animation: currentLevelPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes currentLevelPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .money-level.completed {
+            background: linear-gradient(45deg, rgba(0, 255, 0, 0.3), rgba(0, 200, 0, 0.2));
+            border-color: #00ff00;
+        }
+
+        .money-level.safe {
+            background: linear-gradient(45deg, rgba(255, 215, 0, 0.4), rgba(255, 179, 71, 0.3));
+            border-color: #ffd700;
+            font-weight: 700;
+        }
+
+        .level-number {
+            font-weight: 700;
+            color: #ffd700;
+        }
+
+        .money-amount {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .question-area {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .question-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            font-size: 1.5rem;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .question-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .question-text {
+            font-size: 1.8rem;
+            text-align: center;
+            margin: 30px 0;
+            line-height: 1.4;
+            padding: 25px;
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(255, 179, 71, 0.05));
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .option {
+            padding: 20px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-size: 1.3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: #ffd700;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .option.selected {
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.3), rgba(255, 179, 71, 0.2));
+            border-color: #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .option.correct {
+            background: linear-gradient(145deg, rgba(0, 255, 0, 0.4), rgba(0, 200, 0, 0.3));
+            border-color: #00ff00;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.6);
+            animation: correctAnswer 1s ease-in-out;
+        }
+
+        @keyframes correctAnswer {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .option.incorrect {
+            background: linear-gradient(145deg, rgba(255, 0, 0, 0.4), rgba(200, 0, 0, 0.3));
+            border-color: #ff0000;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
+            animation: incorrectAnswer 0.5s ease-in-out;
+        }
+
+        @keyframes incorrectAnswer {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .option.eliminated {
+            opacity: 0.3;
+            background: #333;
+            border-color: #666;
+            cursor: not-allowed;
+            transform: scale(0.95);
+        }
+
+        .option-letter {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #ffd700;
+            color: #1a1a2e;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: 700;
+            margin-right: 15px;
+        }
+
+        .lifelines {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .lifeline {
+            padding: 15px 25px;
+            background: linear-gradient(45deg, #ff0080, #00ffff);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .lifeline:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .lifeline:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.5;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .action-button {
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #ffd700, #ffb347);
+            border: none;
+            border-radius: 25px;
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .action-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+
+        .action-button.danger {
+            background: linear-gradient(45deg, #ff4444, #cc0000);
+            color: white;
+        }
+
+        .explanation {
+            background: linear-gradient(145deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 128, 0.2));
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .explanation.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .game-over {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.2), rgba(255, 179, 71, 0.1));
+            border-radius: 20px;
+            margin: 30px 0;
+            display: none;
+        }
+
+        .game-over.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .final-amount {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 0 0 20px #ffd700;
+            margin: 20px 0;
+        }
+
+        .audience-poll {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .audience-poll.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .poll-bar {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .poll-letter {
+            width: 30px;
+            font-weight: 700;
+            color: #ffd700;
+        }
+
+        .poll-progress {
+            flex: 1;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 0 10px;
+            overflow: hidden;
+        }
+
+        .poll-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffb347);
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .poll-percentage {
+            width: 40px;
+            text-align: right;
+            font-weight: 700;
+        }
+
+        .friend-advice {
+            background: linear-gradient(145deg, rgba(0, 255, 0, 0.2), rgba(0, 200, 0, 0.1));
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .friend-advice.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 20px;
+            background: linear-gradient(45deg, #00ff00, #00cc00);
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.5s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+        }
+
+        .notification.warning {
+            background: linear-gradient(45deg, #ffd700, #ffb347);
+            color: #1a1a2e;
+        }
+
+        @media (max-width: 768px) {
+            .game-layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .money-ladder {
+                order: 2;
+            }
+            
+            .question-area {
+                order: 1;
+            }
+            
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .game-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .lifelines {
+                flex-wrap: wrap;
+            }
+            
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="game-container">
+        <div class="game-header">
+            <h1>🐝 ¿QUIÉN QUIERE SER MILLONARIO? 👑</h1>
+            <p>Edición Especial: Secretos de la Abeja Reina</p>
+        </div>
+
+        <div class="game-layout">
+            <div class="money-ladder">
+                <h3>💰 ESCALERA DE PREMIOS</h3>
+                <div class="money-level" data-level="10">
+                    <span class="level-number">10</span>
+                    <span class="money-amount">$1,000,000</span>
+                </div>
+                <div class="money-level" data-level="9">
+                    <span class="level-number">9</span>
+                    <span class="money-amount">$500,000</span>
+                </div>
+                <div class="money-level" data-level="8">
+                    <span class="level-number">8</span>
+                    <span class="money-amount">$250,000</span>
+                </div>
+                <div class="money-level" data-level="7">
+                    <span class="level-number">7</span>
+                    <span class="money-amount">$125,000</span>
+                </div>
+                <div class="money-level" data-level="6">
+                    <span class="level-number">6</span>
+                    <span class="money-amount">$64,000</span>
+                </div>
+                <div class="money-level safe" data-level="5">
+                    <span class="level-number">5</span>
+                    <span class="money-amount">$32,000</span>
+                </div>
+                <div class="money-level" data-level="4">
+                    <span class="level-number">4</span>
+                    <span class="money-amount">$16,000</span>
+                </div>
+                <div class="money-level" data-level="3">
+                    <span class="level-number">3</span>
+                    <span class="money-amount">$8,000</span>
+                </div>
+                <div class="money-level" data-level="2">
+                    <span class="level-number">2</span>
+                    <span class="money-amount">$4,000</span>
+                </div>
+                <div class="money-level safe" data-level="1">
+                    <span class="level-number">1</span>
+                    <span class="money-amount">$1,000</span>
+                </div>
+            </div>
+
+            <div class="question-area">
+                <div class="question-header">
+                    <div class="question-number" id="questionNumber">Pregunta 1</div>
+                    <div class="question-value" id="questionValue">$1,000</div>
+                </div>
+
+                <div class="question-text" id="questionText">
+                    ¿Cuántos huevos puede poner una abeja reina en un solo día durante la temporada más activa?
+                </div>
+
+                <div class="options-grid" id="optionsGrid">
+                    <div class="option" data-option="A">
+                        <span class="option-letter">A</span>
+                        <span>500 huevos</span>
+                    </div>
+                    <div class="option" data-option="B">
+                        <span class="option-letter">B</span>
+                        <span>1,000 huevos</span>
+                    </div>
+                    <div class="option" data-option="C">
+                        <span class="option-letter">C</span>
+                        <span>2,000 huevos</span>
+                    </div>
+                    <div class="option" data-option="D">
+                        <span class="option-letter">D</span>
+                        <span>5,000 huevos</span>
+                    </div>
+                </div>
+
+                <div class="lifelines">
+                    <button class="lifeline" id="fiftyFifty" onclick="useFiftyFifty()">
+                        🎯 50:50
+                    </button>
+                    <button class="lifeline" id="callFriend" onclick="callFriend()">
+                        📞 LLAMAR AMIGO
+                    </button>
+                    <button class="lifeline" id="askAudience" onclick="askAudience()">
+                        👥 PREGUNTA AL PÚBLICO
+                    </button>
+                </div>
+
+                <div class="audience-poll" id="audiencePoll">
+                    <h4>📊 Respuestas del Público:</h4>
+                    <div class="poll-bar">
+                        <span class="poll-letter">A:</span>
+                        <div class="poll-progress">
+                            <div class="poll-fill" id="pollA" style="width: 0%;"></div>
+                        </div>
+                        <span class="poll-percentage" id="percentA">0%</span>
+                    </div>
+                    <div class="poll-bar">
+                        <span class="poll-letter">B:</span>
+                        <div class="poll-progress">
+                            <div class="poll-fill" id="pollB" style="width: 0%;"></div>
+                        </div>
+                        <span class="poll-percentage" id="percentB">0%</span>
+                    </div>
+                    <div class="poll-bar">
+                        <span class="poll-letter">C:</span>
+                        <div class="poll-progress">
+                            <div class="poll-fill" id="pollC" style="width: 0%;"></div>
+                        </div>
+                        <span class="poll-percentage" id="percentC">0%</span>
+                    </div>
+                    <div class="poll-bar">
+                        <span class="poll-letter">D:</span>
+                        <div class="poll-progress">
+                            <div class="poll-fill" id="pollD" style="width: 0%;"></div>
+                        </div>
+                        <span class="poll-percentage" id="percentD">0%</span>
+                    </div>
+                </div>
+
+                <div class="friend-advice" id="friendAdvice">
+                    <h4>📞 Consejo del Amigo Científico:</h4>
+                    <p id="friendText"></p>
+                </div>
+
+                <div class="explanation" id="explanation">
+                    <h4>📚 Explicación Científica:</h4>
+                    <p id="explanationText"></p>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="action-button" id="confirmAnswer" onclick="confirmAnswer()" style="display: none;">
+                        ✅ RESPUESTA FINAL
+                    </button>
+                    <button class="action-button danger" id="walkAway" onclick="walkAway()" style="display: none;">
+                        🚪 RETIRARSE
+                    </button>
+                    <button class="action-button" id="nextQuestion" onclick="nextQuestion()" style="display: none;">
+                        ➡️ SIGUIENTE PREGUNTA
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-over" id="gameOver">
+            <h2>🎉 ¡JUEGO TERMINADO! 🎉</h2>
+            <div class="final-amount" id="finalAmount">$0</div>
+            <p id="gameOverMessage"></p>
+            <button class="action-button" onclick="restartGame()" style="margin-top: 20px;">
+                🔄 JUGAR DE NUEVO
+            </button>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Estado del juego
+        let gameState = {
+            currentLevel: 1,
+            selectedAnswer: null,
+            lifelines: {
+                fiftyFifty: true,
+                callFriend: true,
+                askAudience: true
+            },
+            gameActive: true
+        };
+
+        // Preguntas del juego (10 niveles)
+        const questions = [
+            {
+                level: 1,
+                value: "$1,000",
+                question: "¿Cuántos huevos puede poner una abeja reina en un solo día durante la temporada más activa?",
+                options: ["500 huevos", "1,000 huevos", "2,000 huevos", "5,000 huevos"],
+                correct: "C",
+                explanation: "Una abeja reina puede poner hasta 2,000 huevos por día durante la temporada más activa, lo que equivale a aproximadamente un huevo cada 43 segundos.",
+                friendAdvice: "Recuerdo haber leído que las reinas son increíblemente productivas. Creo que la respuesta correcta está entre las opciones más altas, probablemente C."
+            },
+            {
+                level: 2,
+                value: "$4,000",
+                question: "¿Cuánto tiempo vive aproximadamente una abeja reina en condiciones normales?",
+                options: ["6 semanas", "6 meses", "2-5 años", "10 años"],
+                correct: "C",
+                explanation: "Las abejas reinas viven entre 2-5 años, significativamente más que las obreras que solo viven unas 6 semanas en verano.",
+                friendAdvice: "Las reinas definitivamente viven mucho más que las obreras. Estoy bastante seguro de que es la opción C, varios años."
+            },
+            {
+                level: 3,
+                value: "$8,000",
+                question: "¿Qué factor principal determina que una larva se convierta en reina en lugar de obrera?",
+                options: ["Genética especial", "Jalea real exclusiva", "Temperatura de la celda", "Edad de la larva"],
+                correct: "B",
+                explanation: "La alimentación exclusiva con jalea real durante todo el desarrollo larval es lo que determina que una larva se convierta en reina. No hay diferencias genéticas iniciales.",
+                friendAdvice: "Este es un dato clásico de la apicultura. La jalea real es la clave, es lo que hace toda la diferencia. Definitivamente B."
+            },
+            {
+                level: 4,
+                value: "$16,000",
+                question: "¿Cuántas veces se aparea una abeja reina durante toda su vida?",
+                options: ["Una sola vez", "Cada temporada", "Cada mes", "Continuamente"],
+                correct: "A",
+                explanation: "La abeja reina se aparea una sola vez en su vida durante el vuelo nupcial, pero con múltiples zánganos (10-20), y almacena el esperma en su espermateca.",
+                friendAdvice: "Esto es fascinante de la biología de las abejas. Se aparean solo una vez pero con varios machos. La respuesta es A."
+            },
+            {
+                level: 5,
+                value: "$32,000",
+                question: "¿Cuál es la función principal de las feromonas que produce la abeja reina?",
+                options: ["Atraer polen", "Regular la colonia", "Producir miel", "Defender la colmena"],
+                correct: "B",
+                explanation: "Las feromonas de la reina (especialmente la feromona mandibular) regulan el comportamiento de toda la colonia, mantienen la cohesión social y suprimen el desarrollo ovárico de las obreras.",
+                friendAdvice: "Las feromonas son como el sistema de comunicación química de la colmena. Regulan todo el comportamiento social. Es B sin duda."
+            },
+            {
+                level: 6,
+                value: "$64,000",
+                question: "¿Cuánto tiempo tarda en desarrollarse una abeja reina desde huevo hasta adulto?",
+                options: ["12 días", "16 días", "21 días", "28 días"],
+                correct: "B",
+                explanation: "El desarrollo completo de una reina toma 16 días: 3 días como huevo, 5-6 días como larva, y 7-8 días como pupa. Es más rápido que las obreras (21 días).",
+                friendAdvice: "Las reinas se desarrollan más rápido que las obreras porque necesitan emerger primero para eliminar a la competencia. Creo que son 16 días, opción B."
+            },
+            {
+                level: 7,
+                value: "$125,000",
+                question: "¿Qué característica morfológica distingue principalmente el aguijón de la reina del de las obreras?",
+                options: ["Es más largo", "Es liso y reutilizable", "Tiene más veneno", "Es retráctil"],
+                correct: "B",
+                explanation: "El aguijón de la reina es liso (sin púas) y puede ser usado repetidamente, a diferencia del aguijón con púas de las obreras que se queda clavado tras el primer uso.",
+                friendAdvice: "Esta es una diferencia anatómica clave. Las reinas pueden picar múltiples veces porque su aguijón es liso, sin las púas que tienen las obreras. Es B."
+            },
+            {
+                level: 8,
+                value: "$250,000",
+                question: "¿Cuál es la capacidad aproximada de almacenamiento de esperma en la espermateca de una reina?",
+                options: ["1-2 millones", "5-7 millones", "10-15 millones", "20-25 millones"],
+                correct: "B",
+                explanation: "La espermateca de una reina puede almacenar entre 5-7 millones de espermatozoides, que utiliza gradualmente durante toda su vida reproductiva para fertilizar huevos.",
+                friendAdvice: "Este es un dato muy específico de anatomía reproductiva. Recuerdo que eran varios millones, probablemente en el rango medio. Diría que B."
+            },
+            {
+                level: 9,
+                value: "$500,000",
+                question: "¿Qué proceso bioquímico específico activa la jalea real para inducir el desarrollo de una reina?",
+                options: ["Activación de genes Hox", "Metilación del ADN diferencial", "Síntesis de quitina", "Producción de ecdisona"],
+                correct: "B",
+                explanation: "La jalea real induce cambios en la metilación del ADN, especialmente en el gen Dnmt3, lo que resulta en la expresión diferencial de genes que determinan el fenotipo de reina versus obrera.",
+                friendAdvice: "Esta es biología molecular avanzada. La jalea real afecta la expresión génica a través de modificaciones epigenéticas, específicamente metilación del ADN. Es B."
+            },
+            {
+                level: 10,
+                value: "$1,000,000",
+                question: "¿Cuál es el nombre científico de la principal feromona mandibular de la abeja reina?",
+                options: ["Ácido 9-oxo-2-decenoico", "Ácido palmítico", "Acetato de geranilo", "Ácido oleico"],
+                correct: "A",
+                explanation: "El ácido 9-oxo-2-decenoico (9-ODA) es el componente principal de la feromona mandibular de la reina, conocida como 'sustancia reina', que regula el comportamiento de toda la colonia.",
+                friendAdvice: "Esta es química muy específica de feromonas. El ácido 9-oxo-2-decenoico es la famosa 'sustancia reina'. Definitivamente A, aunque es muy técnico."
+            }
+        ];
+
+        // Valores monetarios
+        const moneyValues = ["$1,000", "$4,000", "$8,000", "$16,000", "$32,000", "$64,000", "$125,000", "$250,000", "$500,000", "$1,000,000"];
+
+        // Inicializar el juego
+        function initGame() {
+            updateMoneyLadder();
+            loadQuestion();
+            createParticles();
+        }
+
+        // Actualizar escalera de dinero
+        function updateMoneyLadder() {
+            document.querySelectorAll('.money-level').forEach(level => {
+                level.classList.remove('current', 'completed');
+                const levelNum = parseInt(level.dataset.level);
+                
+                if (levelNum === gameState.currentLevel) {
+                    level.classList.add('current');
+                } else if (levelNum < gameState.currentLevel) {
+                    level.classList.add('completed');
+                }
+            });
+        }
+
+        // Cargar pregunta actual
+        function loadQuestion() {
+            const question = questions[gameState.currentLevel - 1];
+            
+            document.getElementById('questionNumber').textContent = `Pregunta ${gameState.currentLevel}`;
+            document.getElementById('questionValue').textContent = question.value;
+            document.getElementById('questionText').textContent = question.question;
+            
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                const letter = String.fromCharCode(65 + index); // A, B, C, D
+                option.dataset.option = letter;
+                option.className = 'option';
+                option.querySelector('span:last-child').textContent = question.options[index];
+                option.onclick = () => selectOption(letter);
+            });
+            
+            // Resetear elementos de UI
+            document.getElementById('explanation').classList.remove('show');
+            document.getElementById('audiencePoll').classList.remove('show');
+            document.getElementById('friendAdvice').classList.remove('show');
+            document.getElementById('confirmAnswer').style.display = 'none';
+            document.getElementById('walkAway').style.display = gameState.currentLevel > 1 ? 'inline-block' : 'none';
+            document.getElementById('nextQuestion').style.display = 'none';
+            
+            gameState.selectedAnswer = null;
+        }
+
+        // Seleccionar opción
+        function selectOption(letter) {
+            if (!gameState.gameActive) return;
+            
+            // Remover selección anterior
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Seleccionar nueva opción
+            document.querySelector(`[data-option="${letter}"]`).classList.add('selected');
+            gameState.selectedAnswer = letter;
+            
+            document.getElementById('confirmAnswer').style.display = 'inline-block';
+        }
+
+        // Confirmar respuesta
+        function confirmAnswer() {
+            if (!gameState.selectedAnswer) return;
+            
+            const question = questions[gameState.currentLevel - 1];
+            const isCorrect = gameState.selectedAnswer === question.correct;
+            
+            // Mostrar resultado
+            document.querySelectorAll('.option').forEach(option => {
+                const letter = option.dataset.option;
+                if (letter === question.correct) {
+                    option.classList.add('correct');
+                } else if (letter === gameState.selectedAnswer && !isCorrect) {
+                    option.classList.add('incorrect');
+                }
+                option.onclick = null; // Deshabilitar clicks
+            });
+            
+            // Mostrar explicación
+            document.getElementById('explanationText').textContent = question.explanation;
+            document.getElementById('explanation').classList.add('show');
+            
+            document.getElementById('confirmAnswer').style.display = 'none';
+            document.getElementById('walkAway').style.display = 'none';
+            
+            if (isCorrect) {
+                if (gameState.currentLevel === 10) {
+                    // ¡Ganó el millón!
+                    setTimeout(() => {
+                        showGameOver(true, "$1,000,000", "¡FELICITACIONES! ¡Has ganado el MILLÓN! 🎉👑 Eres un verdadero experto en abejas reinas.");
+                    }, 3000);
+                } else {
+                    showNotification('¡Respuesta correcta! 🎉');
+                    document.getElementById('nextQuestion').style.display = 'inline-block';
+                }
+            } else {
+                // Respuesta incorrecta
+                let safeAmount = "$0";
+                if (gameState.currentLevel > 5) safeAmount = "$32,000";
+                else if (gameState.currentLevel > 1) safeAmount = "$1,000";
+                
+                setTimeout(() => {
+                    showGameOver(false, safeAmount, `Respuesta incorrecta. Te llevas ${safeAmount}. ¡Gracias por jugar! 🐝`);
+                }, 3000);
+            }
+        }
+
+        // Siguiente pregunta
+        function nextQuestion() {
+            gameState.currentLevel++;
+            updateMoneyLadder();
+            loadQuestion();
+        }
+
+        // Retirarse del juego
+        function walkAway() {
+            const currentWinnings = moneyValues[gameState.currentLevel - 2]; // Nivel anterior
+            showGameOver(true, currentWinnings, `¡Decisión inteligente! Te retiras con ${currentWinnings}. 🧠💰`);
+        }
+
+        // Comodín 50:50
+        function useFiftyFifty() {
+            if (!gameState.lifelines.fiftyFifty || !gameState.gameActive) return;
+            
+            gameState.lifelines.fiftyFifty = false;
+            document.getElementById('fiftyFifty').disabled = true;
+            
+            const question = questions[gameState.currentLevel - 1];
+            const correctAnswer = question.correct;
+            const options = ['A', 'B', 'C', 'D'];
+            const incorrectOptions = options.filter(opt => opt !== correctAnswer);
+            
+            // Eliminar 2 opciones incorrectas aleatoriamente
+            const toEliminate = incorrectOptions.sort(() => 0.5 - Math.random()).slice(0, 2);
+            
+            toEliminate.forEach(letter => {
+                document.querySelector(`[data-option="${letter}"]`).classList.add('eliminated');
+                document.querySelector(`[data-option="${letter}"]`).onclick = null;
+            });
+            
+            showNotification('50:50 usado - 2 respuestas eliminadas! 🎯');
+        }
+
+        // Comodín llamar a un amigo
+        function callFriend() {
+            if (!gameState.lifelines.callFriend || !gameState.gameActive) return;
+            
+            gameState.lifelines.callFriend = false;
+            document.getElementById('callFriend').disabled = true;
+            
+            const question = questions[gameState.currentLevel - 1];
+            document.getElementById('friendText').textContent = question.friendAdvice;
+            document.getElementById('friendAdvice').classList.add('show');
+            
+            showNotification('Amigo consultado! 📞');
+        }
+
+        // Comodín pregunta al público
+        function askAudience() {
+            if (!gameState.lifelines.askAudience || !gameState.gameActive) return;
+            
+            gameState.lifelines.askAudience = false;
+            document.getElementById('askAudience').disabled = true;
+            
+            const question = questions[gameState.currentLevel - 1];
+            const correctAnswer = question.correct;
+            
+            // Generar porcentajes (favoreciendo la respuesta correcta)
+            let percentages = [0, 0, 0, 0];
+            const correctIndex = correctAnswer.charCodeAt(0) - 65; // A=0, B=1, C=2, D=3
+            
+            // La respuesta correcta obtiene 40-70% de los votos
+            percentages[correctIndex] = 40 + Math.random() * 30;
+            
+            // Distribuir el resto entre las otras opciones
+            let remaining = 100 - percentages[correctIndex];
+            for (let i = 0; i < 4; i++) {
+                if (i !== correctIndex) {
+                    if (i === 3) {
+                        percentages[i] = remaining;
+                    } else {
+                        percentages[i] = Math.random() * remaining * 0.6;
+                        remaining -= percentages[i];
+                    }
+                }
+            }
+            
+            // Mostrar resultados
+            const letters = ['A', 'B', 'C', 'D'];
+            letters.forEach((letter, index) => {
+                const percentage = Math.round(percentages[index]);
+                document.getElementById(`poll${letter}`).style.width = percentage + '%';
+                document.getElementById(`percent${letter}`).textContent = percentage + '%';
+            });
+            
+            document.getElementById('audiencePoll').classList.add('show');
+            showNotification('Público consultado! 👥');
+        }
+
+        // Mostrar fin del juego
+        function showGameOver(won, amount, message) {
+            gameState.gameActive = false;
+            document.getElementById('finalAmount').textContent = amount;
+            document.getElementById('gameOverMessage').textContent = message;
+            document.getElementById('gameOver').classList.add('show');
+            
+            if (won && amount === "$1,000,000") {
+                createCelebrationEffect();
+            }
+        }
+
+        // Reiniciar juego
+        function restartGame() {
+            gameState = {
+                currentLevel: 1,
+                selectedAnswer: null,
+                lifelines: {
+                    fiftyFifty: true,
+                    callFriend: true,
+                    askAudience: true
+                },
+                gameActive: true
+            };
+            
+            // Resetear comodines
+            document.getElementById('fiftyFifty').disabled = false;
+            document.getElementById('callFriend').disabled = false;
+            document.getElementById('askAudience').disabled = false;
+            
+            // Ocultar game over
+            document.getElementById('gameOver').classList.remove('show');
+            
+            // Reiniciar juego
+            updateMoneyLadder();
+            loadQuestion();
+        }
+
+        // Mostrar notificación
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Crear efecto de celebración
+        function createCelebrationEffect() {
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.cssText = `
+                        position: fixed;
+                        width: 10px;
+                        height: 10px;
+                        background: ${['#ffd700', '#ff0080', '#00ffff', '#00ff00'][Math.floor(Math.random() * 4)]};
+                        left: ${Math.random() * 100}%;
+                        top: -10px;
+                        z-index: 1000;
+                        animation: confettiFall 3s ease-out forwards;
+                    `;
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 100);
+            }
+        }
+
+        // Crear partículas de fondo
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const colors = ['#ffd700', '#ffb347', '#ff0080', '#00ffff'];
+            
+            setInterval(() => {
+                if (Math.random() < 0.3) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.boxShadow = `0 0 15px ${particle.style.backgroundColor}`;
+                    particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                    
+                    particlesContainer.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 25000);
+                }
+            }, 800);
+        }
+
+        // Agregar animación de confetti
+        const confettiStyle = document.createElement('style');
+        confettiStyle.textContent = `
+            @keyframes confettiFall {
+                0% {
+                    transform: translateY(-10px) rotate(0deg);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(100vh) rotate(720deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(confettiStyle);
+
+        // Inicializar el juego cuando se carga la página
+        window.addEventListener('load', initGame);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9790f4e8e7f4daf5',t:'MTc1Njg1NzUxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
